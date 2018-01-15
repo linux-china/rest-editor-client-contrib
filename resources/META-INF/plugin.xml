@@ -1,0 +1,57 @@
+<idea-plugin>
+    <id>org.mvnsearch.rest-editor-client-contrib</id>
+    <name>Rest Editor Client Contrib</name>
+    <version>1.0</version>
+    <vendor email="linux_china@hotmail.com">linux_china</vendor>
+
+    <description><![CDATA[
+      Contrib for Rest editor client with Swagger & Spring MVC support
+    ]]></description>
+
+    <change-notes><![CDATA[
+      <ul>
+       <li>0.0.1:
+           <ul>
+              <li>Generate Http REST file for Swagger JSON</li>
+              <li>Intention Action to create http request for actions in Spring MVC</li>
+              <li>Intention Action to create http request for @ApiOperation</li>
+              <li>Link between java and http request</li>
+            </ul>
+       </li>
+      </ul>
+    ]]>
+    </change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="173.0"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+     -->
+    <depends>com.jetbrains.restClient</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+        <intentionAction>
+            <className>org.mvnsearch.intellij.plugins.rest.CreateHttpCallFromSwagger</className>
+            <category>Http Editor Client</category>
+        </intentionAction>
+        <intentionAction>
+            <className>org.mvnsearch.intellij.plugins.rest.CreateHttpCallFromSpringController</className>
+            <category>Http Editor Client</category>
+        </intentionAction>
+        <annotator language="JAVA" implementationClass="org.mvnsearch.intellij.plugins.rest.HttpCallAnnotator"/>
+        <annotator language="HTTP Request" implementationClass="org.mvnsearch.intellij.plugins.rest.JavaMethodInRestAnnotator"/>
+
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+        <action id="create_swagger_rst_file" class="org.mvnsearch.intellij.plugins.rest.CreateSwaggerRestFile"
+                text="Create Swagger rst file" description="Create rst file for all swgger rest apin">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
+        </action>
+    </actions>
+
+</idea-plugin>
