@@ -28,7 +28,7 @@ public class CreateHttpCallFromSpringController extends HttpRequestBaseIntention
     @NotNull
     @Override
     public String getText() {
-        return "Create Http REST Call for Spring Controller";
+        return "Create Http REST Call";
     }
 
     @Nls

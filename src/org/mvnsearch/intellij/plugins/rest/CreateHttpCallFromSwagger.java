@@ -24,7 +24,7 @@ public class CreateHttpCallFromSwagger extends HttpRequestBaseIntentionAction {
     @NotNull
     @Override
     public String getText() {
-        return "Create Http REST Call from @ApiOperation";
+        return "Create Http REST Call";
     }
 
     @Nls
