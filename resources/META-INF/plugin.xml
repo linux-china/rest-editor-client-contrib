@@ -48,8 +48,8 @@
 
     <actions>
         <!-- Add your actions here -->
-        <action id="create_swagger_rst_file" class="org.mvnsearch.intellij.plugins.rest.CreateSwaggerRestFile"
-                text="Create Swagger rst file" description="Create rst file for all swgger rest apin">
+        <action id="create_swagger_rest_file" class="org.mvnsearch.intellij.plugins.rest.CreateSwaggerRestFile"
+                text="Create Swagger rest file" description="Create rest file for all Swagger json file">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
         </action>
     </actions>
