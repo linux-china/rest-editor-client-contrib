@@ -1,5 +1,6 @@
 REST Editor Client Contrib
 ==========================
+Plugin detail page: https://plugins.jetbrains.com/plugin/10369-rest-editor-client-contrib
 
 # Features
 
