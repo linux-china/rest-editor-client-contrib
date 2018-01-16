@@ -45,3 +45,9 @@ Please create  rest-client.env.json in your project directory with following cod
 
 ![Navigate To Http Request](.README_images/navigate_to_http_request.png)
 
+
+# Live Templates
+
+* post.form: Http form post
+* post.upload: Http Upload
+* post.stream: Stream upload
