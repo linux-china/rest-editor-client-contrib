@@ -151,8 +151,10 @@ public class HttpCall {
         //payload
         if (action.equalsIgnoreCase("POST") || action.equalsIgnoreCase("PUT")) {
             if (payload != null && !payload.equalsIgnoreCase("null")) {
+                builder.append("\n");
                 builder.append(payload);
             } else if (pairs != null) {
+                builder.append("\n");
                 builder.append(String.join("&", pairs));
             }
         }
