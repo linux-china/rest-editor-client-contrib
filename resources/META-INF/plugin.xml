@@ -45,7 +45,8 @@
                    implementationClass="org.mvnsearch.intellij.plugins.rest.annotator.HttpCallAnnotator"/>
         <annotator language="HTTP Request"
                    implementationClass="org.mvnsearch.intellij.plugins.rest.annotator.JavaMethodInRestAnnotator"/>
-
+        <defaultLiveTemplatesProvider implementation="org.mvnsearch.intellij.plugins.rest.templates.HttpRequestTemplateProvider"/>
+        <liveTemplateContext implementation="org.mvnsearch.intellij.plugins.rest.templates.HttpRequestFileTemplateContext"/>
     </extensions>
 
     <actions>
