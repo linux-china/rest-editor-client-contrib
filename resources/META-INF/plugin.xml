@@ -10,7 +10,7 @@
 
     <change-notes><![CDATA[
       <ul>
-       <li>0.0.1:
+       <li>0.1.0:
            <ul>
               <li>Generate Http REST file for Swagger JSON</li>
               <li>Intention Action to create http request for Spring MVC Controller</li>
