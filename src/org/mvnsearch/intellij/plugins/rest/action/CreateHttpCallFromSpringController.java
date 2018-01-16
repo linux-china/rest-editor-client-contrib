@@ -9,9 +9,11 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.mvnsearch.intellij.plugins.rest.HttpCall;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * create http call for Spring Controller
@@ -24,6 +26,9 @@ public class CreateHttpCallFromSpringController extends HttpRequestBaseIntention
             "org.springframework.web.bind.annotation.RequestMapping",
             "org.springframework.web.bind.annotation.GetMapping",
             "org.springframework.web.bind.annotation.PostMapping");
+    private List<String> controllerAnnotationClasses = Arrays.asList(
+            "org.springframework.stereotype.Controller",
+            "org.springframework.web.bind.annotation.RestController");
 
     @Nls
     @NotNull
@@ -47,17 +52,34 @@ public class CreateHttpCallFromSpringController extends HttpRequestBaseIntention
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement psiElement) throws IncorrectOperationException {
-        PsiMethod javaMethod = (PsiMethod) psiElement.getParent();
-        if (javaMethod != null) {
-            PsiClass psiClass = (PsiClass) javaMethod.getParent();
-            HttpCall httpCall = createFromRequestMappingMethod(javaMethod);
-            PsiDirectory directory = psiClass.getContainingFile().getParent();
-            String restFileName = psiClass.getName() + ".http";
-            try {
-                HttpRequestPsiFile restFile = getOrCreateHttpRequestFile(directory, restFileName);
-                appendContent(restFile, httpCall);
-            } catch (Exception ignore) {
+        PsiElement parent = psiElement.getParent();
+        if (parent != null && (parent instanceof PsiMethod || parent instanceof PsiClass)) {
+            PsiClass psiClass = null;
+            List<PsiMethod> actionMethods = new ArrayList<>();
+            if (parent instanceof PsiMethod) {
+                PsiMethod javaMethod = (PsiMethod) parent;
+                psiClass = javaMethod.getContainingClass();
+                if (findAnnotation(javaMethod, mappingAnnotationClasses) != null) {
+                    actionMethods.add(javaMethod);
+                }
+            } else {
+                psiClass = (PsiClass) parent;
+                for (PsiMethod psiMethod : psiClass.getMethods()) {
+                    if (findAnnotation(psiMethod, mappingAnnotationClasses) != null) {
+                        actionMethods.add(psiMethod);
+                    }
+                }
+            }
+            if (psiClass != null && !actionMethods.isEmpty()) {
+                List<HttpCall> calls = actionMethods.stream().map(this::createFromRequestMappingMethod).collect(Collectors.toList());
+                PsiDirectory directory = psiClass.getContainingFile().getParent();
+                String restFileName = psiClass.getName() + ".http";
+                try {
+                    HttpRequestPsiFile restFile = getOrCreateHttpRequestFile(directory, restFileName);
+                    appendContent(restFile, calls);
+                } catch (Exception ignore) {
 
+                }
             }
         }
     }
@@ -65,9 +87,13 @@ public class CreateHttpCallFromSpringController extends HttpRequestBaseIntention
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, @NotNull PsiElement psiElement) {
         if (psiElement.getContainingFile() instanceof PsiJavaFile) {
-            if (psiElement.getParent() instanceof PsiMethod) {
-                PsiMethod javaMethod = (PsiMethod) psiElement.getParent();
+            PsiElement parent = psiElement.getParent();
+            if (parent instanceof PsiMethod) {
+                PsiMethod javaMethod = (PsiMethod) parent;
                 return findAnnotation(javaMethod, mappingAnnotationClasses) != null;
+            } else if (parent instanceof PsiClass) {
+                PsiClass javaClass = (PsiClass) parent;
+                return findAnnotation(javaClass, controllerAnnotationClasses) != null;
             }
         }
         return false;
