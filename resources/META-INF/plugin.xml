@@ -1,11 +1,11 @@
 <idea-plugin>
     <id>org.mvnsearch.rest-editor-client-contrib</id>
-    <name>Rest Editor Client Contrib</name>
-    <version>1.0</version>
+    <name>REST Editor Client Contrib</name>
+    <version>1.0.0</version>
     <vendor email="linux_china@hotmail.com">linux_china</vendor>
 
     <description><![CDATA[
-      Contrib for Rest editor client with Swagger & Spring MVC support
+      Contrib for REST Editor Client with Swagger & Spring MVC support
     ]]></description>
 
     <change-notes><![CDATA[
@@ -13,9 +13,9 @@
        <li>0.0.1:
            <ul>
               <li>Generate Http REST file for Swagger JSON</li>
-              <li>Intention Action to create http request for actions in Spring MVC</li>
+              <li>Intention Action to create http request for Spring MVC Controller</li>
               <li>Intention Action to create http request for @ApiOperation</li>
-              <li>Link between java and http request</li>
+              <li>Navigation between Java and Http request</li>
             </ul>
        </li>
       </ul>
@@ -34,21 +34,23 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
         <intentionAction>
-            <className>org.mvnsearch.intellij.plugins.rest.CreateHttpCallFromSwagger</className>
+            <className>org.mvnsearch.intellij.plugins.rest.action.CreateHttpCallFromSwagger</className>
             <category>Http Editor Client</category>
         </intentionAction>
         <intentionAction>
-            <className>org.mvnsearch.intellij.plugins.rest.CreateHttpCallFromSpringController</className>
+            <className>org.mvnsearch.intellij.plugins.rest.action.CreateHttpCallFromSpringController</className>
             <category>Http Editor Client</category>
         </intentionAction>
-        <annotator language="JAVA" implementationClass="org.mvnsearch.intellij.plugins.rest.HttpCallAnnotator"/>
-        <annotator language="HTTP Request" implementationClass="org.mvnsearch.intellij.plugins.rest.JavaMethodInRestAnnotator"/>
+        <annotator language="JAVA"
+                   implementationClass="org.mvnsearch.intellij.plugins.rest.annotator.HttpCallAnnotator"/>
+        <annotator language="HTTP Request"
+                   implementationClass="org.mvnsearch.intellij.plugins.rest.annotator.JavaMethodInRestAnnotator"/>
 
     </extensions>
 
     <actions>
         <!-- Add your actions here -->
-        <action id="create_swagger_rest_file" class="org.mvnsearch.intellij.plugins.rest.CreateSwaggerRestFile"
+        <action id="create_swagger_rest_file" class="org.mvnsearch.intellij.plugins.rest.action.CreateSwaggerRestFile"
                 text="Create Swagger rest file" description="Create rest file for all Swagger json file">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
         </action>
