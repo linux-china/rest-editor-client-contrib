@@ -9,17 +9,22 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.mvnsearch.intellij.plugins.rest.HttpCall;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * create http call from swagger
  *
  * @author linux_china
  */
+@SuppressWarnings("Duplicates")
 public class CreateHttpCallFromSwagger extends HttpRequestBaseIntentionAction {
     private List<String> apiOperationAnnotationClasses = Arrays.asList(
             "io.swagger.annotations.ApiOperation");
+    private List<String> apiAnnotationClasses = Arrays.asList(
+            "io.swagger.annotations.Api");
 
     @Nls
     @NotNull
@@ -37,17 +42,34 @@ public class CreateHttpCallFromSwagger extends HttpRequestBaseIntentionAction {
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement psiElement) throws IncorrectOperationException {
-        PsiMethod javaMethod = (PsiMethod) psiElement.getParent();
-        if (javaMethod != null) {
-            PsiClass psiClass = (PsiClass) javaMethod.getParent();
-            HttpCall httpCall = createFromApiOperationMethod(javaMethod);
-            PsiDirectory directory = psiClass.getContainingFile().getParent();
-            String restFileName = psiClass.getName() + ".http";
-            try {
-                HttpRequestPsiFile restFile = getOrCreateHttpRequestFile(directory, restFileName);
-                appendContent(restFile, httpCall);
-            } catch (Exception ignore) {
+        PsiElement parent = psiElement.getParent();
+        if (parent != null && (parent instanceof PsiMethod || parent instanceof PsiClass)) {
+            PsiClass psiClass;
+            List<PsiMethod> actionMethods = new ArrayList<>();
+            if (parent instanceof PsiMethod) {
+                PsiMethod javaMethod = (PsiMethod) parent;
+                psiClass = javaMethod.getContainingClass();
+                if (findAnnotation(javaMethod, apiOperationAnnotationClasses) != null) {
+                    actionMethods.add(javaMethod);
+                }
+            } else {
+                psiClass = (PsiClass) parent;
+                for (PsiMethod psiMethod : psiClass.getMethods()) {
+                    if (findAnnotation(psiMethod, apiOperationAnnotationClasses) != null) {
+                        actionMethods.add(psiMethod);
+                    }
+                }
+            }
+            if (psiClass != null && !actionMethods.isEmpty()) {
+                List<HttpCall> calls = actionMethods.stream().map(this::createFromApiOperationMethod).collect(Collectors.toList());
+                PsiDirectory directory = psiClass.getContainingFile().getParent();
+                String restFileName = psiClass.getName() + ".http";
+                try {
+                    HttpRequestPsiFile restFile = getOrCreateHttpRequestFile(directory, restFileName);
+                    appendContent(restFile, calls);
+                } catch (Exception ignore) {
 
+                }
             }
         }
     }
@@ -55,9 +77,13 @@ public class CreateHttpCallFromSwagger extends HttpRequestBaseIntentionAction {
     @Override
     public boolean isAvailable(@NotNull Project project, Editor editor, @NotNull PsiElement psiElement) {
         if (psiElement.getContainingFile() instanceof PsiJavaFile) {
-            if (psiElement.getParent() instanceof PsiMethod) {
-                PsiMethod javaMethod = (PsiMethod) psiElement.getParent();
+            PsiElement parent = psiElement.getParent();
+            if (parent instanceof PsiMethod) {
+                PsiMethod javaMethod = (PsiMethod) parent;
                 return findAnnotation(javaMethod, apiOperationAnnotationClasses) != null;
+            } else if (parent instanceof PsiClass) {
+                PsiClass javaClass = (PsiClass) parent;
+                return findAnnotation(javaClass, apiAnnotationClasses) != null;
             }
         }
         return false;
@@ -71,7 +97,7 @@ public class CreateHttpCallFromSwagger extends HttpRequestBaseIntentionAction {
     public HttpCall createFromApiOperationMethod(PsiMethod javaMethod) {
         HttpCall httpCall = new HttpCall();
         PsiAnnotation apiOperationAnnotation = findAnnotation(javaMethod, this.apiOperationAnnotationClasses);
-        httpCall.setComment(generateSeeRefer(javaMethod));
+        httpCall.setComment(generateSeeRefer(javaMethod) );
         httpCall.setAction("POST");
         httpCall.setUrl("http://{{host}}/swagger-assistant/" + javaMethod.getContainingClass().getName() + "/" + javaMethod.getName());
         return httpCall;
