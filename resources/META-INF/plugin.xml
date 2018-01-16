@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>org.mvnsearch.rest-editor-client-contrib</id>
     <name>REST Editor Client Contrib</name>
-    <version>1.0.0</version>
+    <version>0.1.0</version>
     <vendor email="linux_china@hotmail.com">linux_china</vendor>
 
     <description><![CDATA[
