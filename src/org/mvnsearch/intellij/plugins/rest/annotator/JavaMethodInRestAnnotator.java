@@ -1,4 +1,4 @@
-package org.mvnsearch.intellij.plugins.rest;
+package org.mvnsearch.intellij.plugins.rest.annotator;
 
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
 import com.intellij.icons.AllIcons;

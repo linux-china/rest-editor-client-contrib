@@ -1,10 +1,11 @@
-package org.mvnsearch.intellij.plugins.rest;
+package org.mvnsearch.intellij.plugins.rest.action;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import org.mvnsearch.intellij.plugins.rest.HttpCall;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,4 +1,4 @@
-package org.mvnsearch.intellij.plugins.rest;
+package org.mvnsearch.intellij.plugins.rest.action;
 
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -8,6 +8,7 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierListOwner;
 import com.intellij.ws.http.request.HttpRequestPsiFile;
 import org.jetbrains.annotations.Nullable;
+import org.mvnsearch.intellij.plugins.rest.HttpCall;
 
 import java.io.IOException;
 import java.util.List;

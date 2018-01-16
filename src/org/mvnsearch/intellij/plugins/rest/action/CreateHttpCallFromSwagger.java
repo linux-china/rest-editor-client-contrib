@@ -1,4 +1,4 @@
-package org.mvnsearch.intellij.plugins.rest;
+package org.mvnsearch.intellij.plugins.rest.action;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -7,6 +7,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.ws.http.request.HttpRequestPsiFile;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
+import org.mvnsearch.intellij.plugins.rest.HttpCall;
 
 import java.util.Arrays;
 import java.util.List;
