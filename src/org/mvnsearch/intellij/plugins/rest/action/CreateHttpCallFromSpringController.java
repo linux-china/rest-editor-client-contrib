@@ -54,7 +54,7 @@ public class CreateHttpCallFromSpringController extends HttpRequestBaseIntention
     public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement psiElement) throws IncorrectOperationException {
         PsiElement parent = psiElement.getParent();
         if (parent != null && (parent instanceof PsiMethod || parent instanceof PsiClass)) {
-            PsiClass psiClass = null;
+            PsiClass psiClass;
             List<PsiMethod> actionMethods = new ArrayList<>();
             if (parent instanceof PsiMethod) {
                 PsiMethod javaMethod = (PsiMethod) parent;
@@ -109,7 +109,7 @@ public class CreateHttpCallFromSpringController extends HttpRequestBaseIntention
         path = path + getValueInMappingAnnotation(mappingAnnotationOnMethod);
         httpCall.setUrl("http://{{host}}" + path);
         //action
-        if (Objects.equals(mappingAnnotationOnMethod.getQualifiedName(), "org.springframework.web.bind.annotation.PostMapping")) {
+        if (mappingAnnotationOnMethod != null && Objects.equals(mappingAnnotationOnMethod.getQualifiedName(), "org.springframework.web.bind.annotation.PostMapping")) {
             httpCall.setAction("POST");
         } else {
             httpCall.setAction("GET");
