@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
  *
  * @author linux_china
  */
+@SuppressWarnings("Duplicates")
 public class CreateHttpCallFromSpringController extends HttpRequestBaseIntentionAction {
 
     private List<String> mappingAnnotationClasses = Arrays.asList(
@@ -105,8 +106,8 @@ public class CreateHttpCallFromSpringController extends HttpRequestBaseIntention
         //url
         PsiAnnotation mappingAnnotationOnClass = findAnnotation(javaMethod.getContainingClass(), mappingAnnotationClasses);
         PsiAnnotation mappingAnnotationOnMethod = findAnnotation(javaMethod, mappingAnnotationClasses);
-        String path = getValueInMappingAnnotation(mappingAnnotationOnClass);
-        path = path + getValueInMappingAnnotation(mappingAnnotationOnMethod);
+        String path = getAttributeValue(mappingAnnotationOnClass, "value", true);
+        path = path + getAttributeValue(mappingAnnotationOnMethod, "value", true);
         httpCall.setUrl("http://{{host}}" + path);
         //action
         if (mappingAnnotationOnMethod != null && Objects.equals(mappingAnnotationOnMethod.getQualifiedName(), "org.springframework.web.bind.annotation.PostMapping")) {
@@ -148,22 +149,6 @@ public class CreateHttpCallFromSpringController extends HttpRequestBaseIntention
             }
         }
         return httpCall;
-    }
-
-    private String getValueInMappingAnnotation(PsiAnnotation mappingAnnotation) {
-        if (mappingAnnotation == null) return "";
-        String path = "";
-        PsiNameValuePair[] attributes = mappingAnnotation.getParameterList().getAttributes();
-        if (attributes.length == 1) {
-            path = attributes[0].getLiteralValue();
-        } else if (attributes.length > 1) {
-            for (PsiNameValuePair attribute : attributes) {
-                if ("value".equals(attribute.getName())) {
-                    path = attribute.getLiteralValue();
-                }
-            }
-        }
-        return path;
     }
 
 
