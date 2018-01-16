@@ -10,11 +10,21 @@ REST Editor Client Contrib
 
 # Code Generation
 
-* Spring Controller
+Please create  rest-client.env.json in your project directory with following code:
+
+```json
+{
+  "local": {
+    "host": "http://localhost:8080"
+  }
+}
+```
+
+* Spring Controller class & action method
 
 ![](.README_images/generate_controller_request.png)
 
-* Swagger Json
+* Swagger Json: @Api class or @ApiOperation method
 
 ![](.README_images/generate_swagger_rest.png)
 
