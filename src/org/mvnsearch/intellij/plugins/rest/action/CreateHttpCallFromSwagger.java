@@ -99,7 +99,7 @@ public class CreateHttpCallFromSwagger extends HttpRequestBaseIntentionAction {
         PsiAnnotation apiOperationAnnotation = findAnnotation(javaMethod, this.apiOperationAnnotationClasses);
         httpCall.setComment(generateSeeRefer(javaMethod) );
         httpCall.setAction("POST");
-        httpCall.setUrl("http://{{host}}/swagger-assistant/" + javaMethod.getContainingClass().getName() + "/" + javaMethod.getName());
+        httpCall.setUrl("{{host}}/swagger-assistant/" + javaMethod.getContainingClass().getName() + "/" + javaMethod.getName());
         return httpCall;
     }
 

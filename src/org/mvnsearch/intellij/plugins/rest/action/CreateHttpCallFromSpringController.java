@@ -108,7 +108,7 @@ public class CreateHttpCallFromSpringController extends HttpRequestBaseIntention
         PsiAnnotation mappingAnnotationOnMethod = findAnnotation(javaMethod, mappingAnnotationClasses);
         String path = getAttributeValue(mappingAnnotationOnClass, "value", true);
         path = path + getAttributeValue(mappingAnnotationOnMethod, "value", true);
-        httpCall.setUrl("http://{{host}}" + path);
+        httpCall.setUrl("{{host}}" + path);
         //action
         if (mappingAnnotationOnMethod != null && Objects.equals(mappingAnnotationOnMethod.getQualifiedName(), "org.springframework.web.bind.annotation.PostMapping")) {
             httpCall.setAction("POST");
