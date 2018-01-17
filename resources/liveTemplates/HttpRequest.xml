@@ -7,7 +7,7 @@
         </context>
     </template>
     <template name="post.stream"
-              value="POST {{host}/v1/image/binary&#10;Content-Type: application/octet-stream&#10;&#10;&lt; demo.txt&#10;"
+              value="POST {{host}}/v1/image/binary&#10;Content-Type: application/octet-stream&#10;&#10;&lt; demo.txt&#10;"
               description="Post stream" toReformat="false" toShortenFQNames="true">
         <context>
             <option name="HttpRequest" value="true"/>
@@ -16,6 +16,13 @@
     <template name="post.upload"
               value="POST {{host}}/upload&#10;Content-Type: multipart/form-data; boundary=---------------------------7d81b516112482&#10;&#10;-----------------------------7d81b516112482&#10;Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;demo.jpg&quot;&#10;Content-Type: image/jpeg&#10;&#10;&lt; /Users/admin/demo.jpg&#10;-----------------------------7d81b516112482&#10;Content-Disposition: form-data; name=&quot;name&quot;&#10;&#10;Jackie&#10;-----------------------------7d81b516112482"
               description="post upload" toReformat="false" toShortenFQNames="true">
+        <context>
+            <option name="HttpRequest" value="true"/>
+        </context>
+    </template>
+    <template name="post.json"
+              value="POST {{host}}/json&#10;Content-Type: application/json&#10;&#10;{&#10;  &quot;id&quot;:1&#10;}"
+              description="Post json data" toReformat="false" toShortenFQNames="true">
         <context>
             <option name="HttpRequest" value="true"/>
         </context>
