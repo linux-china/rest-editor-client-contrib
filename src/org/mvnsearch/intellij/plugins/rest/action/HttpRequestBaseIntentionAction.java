@@ -79,7 +79,7 @@ public abstract class HttpRequestBaseIntentionAction extends PsiElementBaseInten
         return "{" +
                 Stream.of(psiClass.getFields())
                         .map(psiField -> {
-                            return "\"" + psiField.getName() + "\":\"\"";
+                            return "\"" + psiField.getName() + "\": " + getDefaultJsonValue(psiField.getType().getCanonicalText());
                         })
                         .collect(Collectors.joining(","))
                 + "}";
@@ -111,5 +111,37 @@ public abstract class HttpRequestBaseIntentionAction extends PsiElementBaseInten
             }
         }
         return attributeValue;
+    }
+
+    protected String getDefaultJsonValue(String dataType) {
+        if (dataType.endsWith("[]")) return "[]";
+        if (dataType.contains("<")) {
+            dataType = dataType.substring(0, dataType.indexOf("<"));
+        }
+        switch (dataType) {
+            case "java.lang.String":
+                return "\"\"";
+            case "java.lang.Boolean":
+            case "boolean":
+                return "true";
+            case "java.lang.Integer":
+            case "java.lang.Long":
+            case "int":
+                return "1";
+            case "java.lang.Double":
+            case "double":
+                return "1.0";
+            case "java.lang.Float":
+            case "float":
+                return "1.0";
+            case "java.util.Date":
+                return "\"2017-10-10 10:10:10\"";
+            case "java.util.Map":
+                return "{}";
+            case "java.util.List":
+                return "[]";
+            default:
+                return "\"\"";
+        }
     }
 }
