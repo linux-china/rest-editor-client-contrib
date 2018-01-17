@@ -114,7 +114,7 @@ public abstract class HttpRequestBaseIntentionAction extends PsiElementBaseInten
     }
 
     protected String getDefaultJsonValue(String dataType) {
-        if (dataType.endsWith("[]")) return "[]";
+        if (dataType.endsWith("[]")) return "[" + getDefaultJsonValue(dataType.replace("[]", "")) + "]";
         if (dataType.contains("<")) {
             dataType = dataType.substring(0, dataType.indexOf("<"));
         }
@@ -126,22 +126,28 @@ public abstract class HttpRequestBaseIntentionAction extends PsiElementBaseInten
                 return "true";
             case "java.lang.Integer":
             case "java.lang.Long":
+            case "java.math.BigDecimal":
+            case "java.lang.Byte":
+            case "java.lang.Short":
+            case "long":
             case "int":
+            case "short":
+            case "byte":
                 return "1";
             case "java.lang.Double":
-            case "double":
-                return "1.0";
             case "java.lang.Float":
+            case "double":
             case "float":
                 return "1.0";
             case "java.util.Date":
                 return "\"2017-10-10 10:10:10\"";
             case "java.util.Map":
                 return "{}";
+            case "java.util.Set":
             case "java.util.List":
                 return "[]";
             default:
-                return "\"\"";
+                return "{}";
         }
     }
 }
