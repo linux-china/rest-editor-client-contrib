@@ -107,6 +107,10 @@ public class HttpCall {
         headers.put("Authorization", "Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes()));
     }
 
+    public void setCookieHeader(String cookeValues) {
+        headers.put("Cookie", cookeValues);
+    }
+
     public void setContentType(String contentType) {
         headers.put("Content-Type", contentType);
     }
