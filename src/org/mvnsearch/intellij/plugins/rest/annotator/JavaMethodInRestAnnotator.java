@@ -5,11 +5,10 @@ import com.intellij.icons.AllIcons;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiMethod;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PsiShortNamesCache;
 import com.intellij.ws.http.request.HttpRequestPsiFile;
 import org.jetbrains.annotations.NotNull;
@@ -29,30 +28,56 @@ public class JavaMethodInRestAnnotator implements Annotator {
             LeafPsiElement leafPsiElement = (LeafPsiElement) psiElement;
             String text = leafPsiElement.getText();
             if (text.contains("@see")) {
-                String className = text.substring(text.indexOf("@see") + 4).trim();
+                String referName = text.substring(text.indexOf("@see") + 4).trim();
+                //resolve class name & method name
+                String className = null;
                 String methodName = null;
-                if (className.contains(" ")) {
-                    className = className.substring(0, className.indexOf(" "));
+                if (referName.contains(" ")) {
+                    referName = referName.substring(0, referName.indexOf(" "));
                 }
-                //method refer
-                if (className.startsWith("#")) {
-                    methodName = className.substring(1);
+                //method refer  #methodName
+                if (referName.startsWith("#")) {
+                    methodName = referName.substring(1);
                     className = restFile.getName().replace(".http", "");
                 }
-                if (className.contains("#")) {
-                    className = className.substring(0, className.indexOf("#"));
-                    methodName = className.substring(className.indexOf("#") + 1);
+                //class & method ref  com.xxx.Class1#method1
+                if (referName.contains("#")) {
+                    className = referName.substring(0, referName.indexOf("#"));
+                    methodName = referName.substring(referName.indexOf("#") + 1);
                 }
-                PsiClass[] classesByName = PsiShortNamesCache.getInstance(psiElement.getProject()).getClassesByName(className, restFile.getResolveScope());
-                for (PsiClass psiClass : classesByName) {
-                    PsiElement navElement = psiClass;
+                if (className == null) {
+                    className = referName;
+                }
+                //method reference  com.foobar.Class.method1
+                if (className.contains(".") && Character.isLowerCase(className.charAt(className.lastIndexOf(".") + 1))) {
+                    String fullClassName = className.substring(0, className.lastIndexOf("."));
+                    methodName = className.substring(className.lastIndexOf(".") + 1);
+                    className = fullClassName;
+                }
+                // class & navigation element
+                Project project = psiElement.getProject();
+                PsiClass referPsiClass = null;
+                PsiElement navElement = null;
+                if (className.contains(".")) {  //full name
+                    referPsiClass = JavaPsiFacade.getInstance(project).findClass(className, GlobalSearchScope.allScope(project));
+                } else {  // search by short name
+                    PsiClass[] classesByName = PsiShortNamesCache.getInstance(psiElement.getProject()).getClassesByName(className, restFile.getResolveScope());
+                    if (classesByName.length > 0) {
+                        referPsiClass = classesByName[0];
+                    }
+                }
+                //create icon gutter
+                if (referPsiClass != null) {
                     if (methodName != null) {
-                        for (PsiMethod psiMethod : psiClass.getMethods()) {
+                        for (PsiMethod psiMethod : referPsiClass.getMethods()) {
                             if (psiMethod.getName().equalsIgnoreCase(methodName)) {
                                 navElement = psiMethod;
                                 break;
                             }
                         }
+                    }
+                    if (navElement == null) {
+                        navElement = referPsiClass;
                     }
                     Icon icon = (psiElement instanceof PsiClass) ? AllIcons.FileTypes.Java : AllIcons.Nodes.MethodReference;
                     NavigationGutterIconBuilder<PsiElement> iconBuilder = NavigationGutterIconBuilder.create(icon);
@@ -61,7 +86,6 @@ public class JavaMethodInRestAnnotator implements Annotator {
                             .setPopupTitle("Navigate to handler")
                             .setAlignment(GutterIconRenderer.Alignment.LEFT)
                             .install(annotationHolder, leafPsiElement);
-                    break;
                 }
 
             }
