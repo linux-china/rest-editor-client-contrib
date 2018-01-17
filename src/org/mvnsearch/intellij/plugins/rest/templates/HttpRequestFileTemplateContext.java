@@ -4,6 +4,8 @@ import com.intellij.codeInsight.template.TemplateContextType;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.stream.Stream;
+
 /**
  * Http request file template context
  *
@@ -17,6 +19,6 @@ public class HttpRequestFileTemplateContext extends TemplateContextType {
 
     @Override
     public boolean isInContext(@NotNull PsiFile psiFile, int i) {
-        return psiFile.getName().endsWith(".http") || psiFile.getName().endsWith(".rest");
+        return Stream.of(".http", ".rest").anyMatch(extName -> psiFile.getName().endsWith(extName));
     }
 }
