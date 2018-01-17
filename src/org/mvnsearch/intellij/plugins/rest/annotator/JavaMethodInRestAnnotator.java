@@ -39,9 +39,7 @@ public class JavaMethodInRestAnnotator implements Annotator {
                 if (referName.startsWith("#")) {
                     methodName = referName.substring(1);
                     className = restFile.getName().replace(".http", "");
-                }
-                //class & method ref  com.xxx.Class1#method1
-                if (referName.contains("#")) {
+                } else if (referName.contains("#")) {
                     className = referName.substring(0, referName.indexOf("#"));
                     methodName = referName.substring(referName.indexOf("#") + 1);
                 }
