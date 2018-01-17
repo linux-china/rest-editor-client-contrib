@@ -62,13 +62,10 @@ public abstract class HttpRequestBaseIntentionAction extends PsiElementBaseInten
         StringBuilder builder = new StringBuilder();
         builder.append(psiMethod.getName());
         if (includeParameters) {
-            builder.append("(");
-            //params type
-            String paramsType = Stream.of(psiMethod.getParameterList().getParameters())
-                    .map(param -> param.getType().getCanonicalText())
-                    .collect(Collectors.joining(","));
-            if (paramsType != null) {
-                builder.append(paramsType);
+            if (psiMethod.getParameterList().getParametersCount() > 0) {
+                builder.append(Stream.of(psiMethod.getParameterList().getParameters())
+                        .map(param -> param.getType().getCanonicalText())
+                        .collect(Collectors.joining(",", "(", ")")));
             }
             builder.append(")");
         }
@@ -76,13 +73,9 @@ public abstract class HttpRequestBaseIntentionAction extends PsiElementBaseInten
     }
 
     protected String generateJsonExampleForPsiClass(PsiClass psiClass) {
-        return "{" +
-                Stream.of(psiClass.getFields())
-                        .map(psiField -> {
-                            return "\"" + psiField.getName() + "\": " + getDefaultJsonValue(psiField.getType().getCanonicalText());
-                        })
-                        .collect(Collectors.joining(","))
-                + "}";
+        return Stream.of(psiClass.getFields())
+                .map(psiField -> "\"" + psiField.getName() + "\": " + getDefaultJsonValue(psiField.getType().getCanonicalText()))
+                .collect(Collectors.joining(",", "{", "}"));
 
     }
 
