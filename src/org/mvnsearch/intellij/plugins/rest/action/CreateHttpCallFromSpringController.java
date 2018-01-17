@@ -3,6 +3,7 @@ package org.mvnsearch.intellij.plugins.rest.action;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.ws.http.request.HttpRequestPsiFile;
 import org.jetbrains.annotations.Nls;
@@ -141,7 +142,8 @@ public class CreateHttpCallFromSpringController extends HttpRequestBaseIntention
                                 break;
                             default:
                                 httpCall.setContentType("application/json");
-                                httpCall.setPayload("{}");
+                                PsiClass psiClass = JavaPsiFacade.getInstance(psiParameter.getProject()).findClass(paramType, GlobalSearchScope.allScope(psiParameter.getProject()));
+                                httpCall.setPayload(generateJsonExampleForPsiClass(psiClass));
                                 break;
                         }
                     }
