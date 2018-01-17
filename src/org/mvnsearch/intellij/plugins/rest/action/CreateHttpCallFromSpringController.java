@@ -102,7 +102,7 @@ public class CreateHttpCallFromSpringController extends HttpRequestBaseIntention
 
     private HttpCall createFromRequestMappingMethod(PsiMethod javaMethod) {
         HttpCall httpCall = new HttpCall();
-        httpCall.setComment(generateSeeRefer(javaMethod));
+        httpCall.setComment("@see #" + getMethodSignature(javaMethod, false));
         //url
         PsiAnnotation mappingAnnotationOnClass = findAnnotation(javaMethod.getContainingClass(), mappingAnnotationClasses);
         PsiAnnotation mappingAnnotationOnMethod = findAnnotation(javaMethod, mappingAnnotationClasses);
