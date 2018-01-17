@@ -17,6 +17,7 @@ import java.util.stream.Stream;
  *
  * @author linux_china
  */
+@SuppressWarnings("SameParameterValue")
 public abstract class HttpRequestBaseIntentionAction extends PsiElementBaseIntentionAction {
 
     @Nullable
@@ -81,7 +82,6 @@ public abstract class HttpRequestBaseIntentionAction extends PsiElementBaseInten
      * @param isDefault     is default value
      * @return attribute value
      */
-    @SuppressWarnings("SameParameterValue")
     protected String getAttributeValue(PsiAnnotation psiAnnotation, String attributeName, boolean isDefault) {
         if (psiAnnotation == null) return "";
         String attributeValue = "";
