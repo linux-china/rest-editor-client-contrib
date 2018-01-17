@@ -65,13 +65,25 @@ public abstract class HttpRequestBaseIntentionAction extends PsiElementBaseInten
             builder.append("(");
             //params type
             String paramsType = Stream.of(psiMethod.getParameterList().getParameters())
-                    .map(param -> param.getType().getCanonicalText()).collect(Collectors.joining(","));
+                    .map(param -> param.getType().getCanonicalText())
+                    .collect(Collectors.joining(","));
             if (paramsType != null) {
                 builder.append(paramsType);
             }
             builder.append(")");
         }
         return builder.toString();
+    }
+
+    protected String generateJsonExampleForPsiClass(PsiClass psiClass) {
+        return "{" +
+                Stream.of(psiClass.getFields())
+                        .map(psiField -> {
+                            return "\"" + psiField.getName() + "\":\"\"";
+                        })
+                        .collect(Collectors.joining(","))
+                + "}";
+
     }
 
     /**
