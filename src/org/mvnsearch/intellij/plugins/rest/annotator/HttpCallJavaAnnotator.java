@@ -21,9 +21,11 @@ public class HttpCallJavaAnnotator extends HttpCallBaseAnnotator {
             PsiMethod javaMethod = (PsiMethod) psiElement;
             PsiClass psiClass = (PsiClass) javaMethod.getParent();
             PsiDirectory directory = psiClass.getContainingFile().getParent();
-            String rstFileName = psiClass.getName() + ".http";
-            HttpRequestPsiFile rstFile = (HttpRequestPsiFile) directory.findFile(rstFileName);
-            bindHttpCall(annotationHolder, rstFile, javaMethod, javaMethod.getName());
+            if (directory != null) {
+                String rstFileName = psiClass.getName() + ".http";
+                HttpRequestPsiFile rstFile = (HttpRequestPsiFile) directory.findFile(rstFileName);
+                bindHttpCall(annotationHolder, rstFile, javaMethod, javaMethod.getName());
+            }
         }
 
     }
