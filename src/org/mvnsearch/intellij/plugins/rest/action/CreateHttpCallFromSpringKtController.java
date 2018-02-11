@@ -59,7 +59,7 @@ public class CreateHttpCallFromSpringKtController extends HttpRequestBaseIntenti
     @Override
     public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement psiElement) throws IncorrectOperationException {
         PsiElement parent = psiElement.getParent();
-        if (parent != null && (parent instanceof KtNamedFunction || parent instanceof KtClass)) {
+        if ((parent instanceof KtNamedFunction || parent instanceof KtClass)) {
             KtClass ktClass;
             List<KtNamedFunction> actionMethods = new ArrayList<>();
             if (parent instanceof KtNamedFunction) {

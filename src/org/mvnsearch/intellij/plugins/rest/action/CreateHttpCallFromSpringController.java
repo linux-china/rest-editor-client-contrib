@@ -55,7 +55,7 @@ public class CreateHttpCallFromSpringController extends HttpRequestBaseIntention
     @Override
     public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement psiElement) throws IncorrectOperationException {
         PsiElement parent = psiElement.getParent();
-        if (parent != null && (parent instanceof PsiMethod || parent instanceof PsiClass)) {
+        if ((parent instanceof PsiMethod || parent instanceof PsiClass)) {
             PsiClass psiClass;
             List<PsiMethod> actionMethods = new ArrayList<>();
             if (parent instanceof PsiMethod) {
