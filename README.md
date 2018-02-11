@@ -51,3 +51,7 @@ Please create  rest-client.env.json in your project directory with following cod
 * post.form: Http form post
 * post.upload: Http Upload
 * post.stream: Stream upload
+
+# References
+
+* HTTP Client Issues: https://youtrack.jetbrains.com/issues?q=%23%7BHTTP%20Client%7D
