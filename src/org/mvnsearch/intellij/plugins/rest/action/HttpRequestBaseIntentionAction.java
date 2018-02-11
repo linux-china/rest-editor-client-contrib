@@ -7,6 +7,8 @@ import com.intellij.ws.http.request.HttpRequestPsiFile;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.psi.KtAnnotationEntry;
 import org.jetbrains.kotlin.psi.KtModifierListOwner;
+import org.jetbrains.kotlin.psi.KtValueArgument;
+import org.jetbrains.kotlin.psi.KtValueArgumentList;
 import org.mvnsearch.intellij.plugins.rest.HttpCall;
 
 import java.io.IOException;
@@ -117,6 +119,33 @@ public abstract class HttpRequestBaseIntentionAction extends PsiElementBaseInten
             }
         }
         return attributeValue;
+    }
+
+
+    /**
+     * get attribute value
+     *
+     * @param ktAnnotationEntry KtAnnotationEntry annotation
+     * @param attributeName     attribute name
+     * @param isDefault         is default value
+     * @return attribute value
+     */
+    protected String getAttributeValue(KtAnnotationEntry ktAnnotationEntry, String attributeName, boolean isDefault) {
+        if (ktAnnotationEntry == null) return "";
+        KtValueArgumentList valueArgumentList = ktAnnotationEntry.getValueArgumentList();
+        if (valueArgumentList == null || ktAnnotationEntry.getValueArguments().isEmpty()) {
+            return "";
+        }
+        if (isDefault && valueArgumentList.getArguments().size() == 1) {
+            return valueArgumentList.getArguments().get(0).getText().replaceAll("\"", "");
+        }
+        for (KtValueArgument ktValueArgument : valueArgumentList.getArguments()) {
+            String text = ktValueArgument.getText();
+            if (text.startsWith(attributeName + "=")) {
+                return text.substring(text.indexOf("=") + 1).replaceAll("\"", "");
+            }
+        }
+        return "";
     }
 
     protected String getDefaultJsonValue(String dataType) {
