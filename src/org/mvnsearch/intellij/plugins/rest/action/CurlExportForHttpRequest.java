@@ -76,7 +76,7 @@ public class CurlExportForHttpRequest extends PsiElementBaseIntentionAction {
         //body
         if ("POST".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method)) {
             if (httpRequest.getRequestBody() != null && httpRequest.getRequestBody().getText() != null) {
-                builder.append(" -d '" + httpRequest.getRequestBody().getText() + "'");
+                builder.append(" -d '" + httpRequest.getRequestBody().getText().replaceAll(System.lineSeparator(), "\\\\" + System.lineSeparator()) + "'");
             }
         }
         String httpUrl = httpRequest.getHttpUrl(substitutor);
