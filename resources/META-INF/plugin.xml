@@ -13,6 +13,7 @@
        <li>0.3.0:
          <ul>
             <li>Kotlin support</li>
+            <li>curl export support</li>
          </ul>
        </li>
        <li>0.2.0:
