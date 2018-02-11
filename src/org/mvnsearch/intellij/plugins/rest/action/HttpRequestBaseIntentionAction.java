@@ -5,6 +5,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.ws.http.request.HttpRequestPsiFile;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.kotlin.psi.KtAnnotationEntry;
+import org.jetbrains.kotlin.psi.KtModifierListOwner;
 import org.mvnsearch.intellij.plugins.rest.HttpCall;
 
 import java.io.IOException;
@@ -25,6 +27,17 @@ public abstract class HttpRequestBaseIntentionAction extends PsiElementBaseInten
         PsiAnnotation[] annotations = modifierListOwner.getAnnotations();
         for (PsiAnnotation annotation : annotations) {
             if (mappingAnnotationClasses.contains(annotation.getQualifiedName())) {
+                return annotation;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    protected KtAnnotationEntry findAnnotation(KtModifierListOwner modifierListOwner, List<String> mappingAnnotationClasses) {
+        List<KtAnnotationEntry> annotationEntries = modifierListOwner.getAnnotationEntries();
+        for (KtAnnotationEntry annotation : annotationEntries) {
+            if (annotation.getTypeReference() != null && mappingAnnotationClasses.contains(annotation.getTypeReference().getText())) {
                 return annotation;
             }
         }
