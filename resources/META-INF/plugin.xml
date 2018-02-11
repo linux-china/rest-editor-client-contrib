@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>org.mvnsearch.rest-editor-client-contrib</id>
     <name>REST Editor Client Contrib</name>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
     <vendor email="linux_china@hotmail.com">linux_china</vendor>
 
     <description><![CDATA[
@@ -10,21 +10,26 @@
 
     <change-notes><![CDATA[
       <ul>
+       <li>0.3.0:
+         <ul>
+            <li>Kotlin support</li>
+         </ul>
+       </li>
        <li>0.2.0:
-                 <ul>
-                    <li>Live Templates: post.form, post.json, post.stream and post.upload</li>
-                    <li>Method refer to method reference like: com.foobar.HelloController.hi</li>
-                    <li>Json example data generation</li>
-                    <li>Code polishing</li>
-                  </ul>
-             </li>
+         <ul>
+           <li>Live Templates: post.form, post.json, post.stream and post.upload</li>
+           <li>Method refer to method reference like: com.foobar.HelloController.hi</li>
+           <li>Json example data generation</li>
+           <li>Code polishing</li>
+         </ul>
+       </li>
        <li>0.1.0:
-           <ul>
-              <li>Generate Http REST file for Swagger JSON</li>
-              <li>Intention Action to create http request for Spring MVC Controller</li>
-              <li>Intention Action to create http request for @ApiOperation</li>
-              <li>Navigation between Java and Http request</li>
-            </ul>
+        ul>
+          <li>Generate Http REST file for Swagger JSON</li>
+          <li>Intention Action to create http request for Spring MVC Controller</li>
+          <li>Intention Action to create http request for @ApiOperation</li>
+          <li>Navigation between Java and Http request</li>
+        </ul>
        </li>
       </ul>
     ]]>
@@ -38,6 +43,7 @@
     <!-- uncomment to enable plugin in all products
      -->
     <depends>com.jetbrains.restClient</depends>
+    <depends optional="true">org.jetbrains.kotlin</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
@@ -49,14 +55,25 @@
             <className>org.mvnsearch.intellij.plugins.rest.action.CreateHttpCallFromSpringController</className>
             <category>Http Editor Client</category>
         </intentionAction>
+        <intentionAction>
+            <className>org.mvnsearch.intellij.plugins.rest.action.CreateHttpCallFromSpringKtController</className>
+            <category>Http Editor Client</category>
+        </intentionAction>
+        <intentionAction>
+            <className>org.mvnsearch.intellij.plugins.rest.action.CurlExportForHttpRequest</className>
+            <category>Http Editor Client</category>
+        </intentionAction>
         <annotator language="JAVA"
-                   implementationClass="org.mvnsearch.intellij.plugins.rest.annotator.HttpCallAnnotator"/>
+                   implementationClass="org.mvnsearch.intellij.plugins.rest.annotator.HttpCallJavaAnnotator"/>
+        <annotator language="kotlin"
+                   implementationClass="org.mvnsearch.intellij.plugins.rest.annotator.HttpCallKotlinAnnotator"/>
         <annotator language="HTTP Request"
                    implementationClass="org.mvnsearch.intellij.plugins.rest.annotator.JavaMethodInRestAnnotator"/>
         <defaultLiveTemplatesProvider
                 implementation="org.mvnsearch.intellij.plugins.rest.templates.HttpRequestTemplateProvider"/>
         <liveTemplateContext
                 implementation="org.mvnsearch.intellij.plugins.rest.templates.HttpRequestFileTemplateContext"/>
+
     </extensions>
 
     <actions>
