@@ -14,6 +14,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.intellij.ws.http.request.HttpRequestVariableSubstitutor;
 import com.intellij.ws.http.request.psi.HttpMethod;
 import com.intellij.ws.http.request.psi.HttpRequest;
+import com.intellij.ws.http.request.psi.HttpRequestTarget;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
@@ -93,7 +94,15 @@ public class CurlExportForHttpRequest extends PsiElementBaseIntentionAction {
             }
         }
         String httpUrl = httpRequest.getHttpUrl(substitutor);
-        builder.append(" " + replaceByEnv(restClientEnv, httpUrl));
+        String query = "";
+        HttpRequestTarget requestTarget = httpRequest.getRequestTarget();
+        if (requestTarget != null && requestTarget.getQuery() != null && requestTarget.getQuery().getText() != null) {
+            query = requestTarget.getQuery().getText();
+        }
+        if (!query.isEmpty()) {
+            query = "?" + query;
+        }
+        builder.append(" '" + replaceByEnv(restClientEnv, httpUrl) + query + "'");
         return builder.toString();
     }
 
